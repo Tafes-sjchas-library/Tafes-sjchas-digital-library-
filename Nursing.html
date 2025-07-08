@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nursing - TAFES Library</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .button-container {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .nursing-button, .flip-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(145deg, silver, gold, #b9f2ff);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nursing-button:hover, .flip-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .center-flip {
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="margin-top: 20px; color: #333;">Nursing Books Section</h2>
+
+  <div class="button-container">
+    <button class="nursing-button">NURSING1</button>
+    <button class="nursing-button">NURSING2</button>
+    <button class="nursing-button">NURSING3</button>
+    <button class="nursing-button">NURSING4</button>
+    <button class="nursing-button">NURSING5</button>
+  </div>
+
+  <div class="center-flip">
+    <button class="flip-button">Flip Books</button>
+  </div>
+
+</body>
+</html>

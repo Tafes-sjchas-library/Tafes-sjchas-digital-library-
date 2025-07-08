@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TAFES Sjchas Digital Library</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: relative;
+      height: 100vh;
+      background: url('mot.jpeg') no-repeat center center/cover;
+      color: white;
+    }
+    .library-title {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: 'Times New Roman', serif;
+      font-weight: bold;
+      font-size: 26px;
+      color: #222;
+      text-transform: uppercase;
+      background-color: rgba(255,255,255,0.8);
+      padding: 10px 18px;
+      border-radius: 5px;
+      z-index: 1001;
+    }
+
+    .menu-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      z-index: 1002;
+    }
+
+    .menu-icon div {
+      width: 30px;
+      height: 4px;
+      background-color: red;
+      margin: 5px 0;
+      transition: 0.4s;
+    }
+
+    .menu {
+      position: absolute;
+      top: 70px; /* Opens below the title */
+      left: 20px;
+      background-color: royalblue;
+      width: 250px;
+      padding-top: 10px;
+      border-radius: 8px;
+      z-index: 1000;
+
+      transform: scale(0);
+      transform-origin: top left;
+      transition: transform 0.4s ease;
+    }
+
+    .menu.active {
+      transform: scale(1);
+    }
+
+    .menu a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .menu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      .library-title {
+        font-size: 20px;
+        padding: 6px 12px;
+      }
+
+      .menu a {
+        font-size: 16px;
+      }
+    }
+     .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .text-overlay {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 75%;
+      z-index: 2;
+    }
+
+    .blue-text {
+      color: white;
+      font-size: 32px;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    .yellow-text {
+      color: yellow;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px black;
+      margin-top: 50px;
+    }
+     .quote-box {
+      background: linear-gradient(to bottom, #d0e8f2, #4a90e2 50%, #aaa 100%);
+      color: white;
+      border-radius: 30px;
+      padding: 30px 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .main-text {
+      font-size: 22px;
+      position: relative;
+    }
+
+    .main-text::before {
+      content: "“";
+      color: yellow;
+      font-size: 110px;
+      position: absolute;
+      left: -20px;
+      top: -15px;
+    }
+
+    .verse {
+      margin-top: 20px;
+      font-size: 22px;
+      color: white;
+      font-style: italic;
+    }
+    .overlay-box {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  max-width: 800px;
+  background: rgba(0, 0, 255, 0.2); /* transparent blue */
+  border-radius: 20px;
+  padding: 80px;
+  text-align: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  z-index: 1003;
+  backdrop-filter: blur(4px);
+}
+
+.fade-slide {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+
+.fade-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade-slide.exit {
+  animation: slideLeft 1.5s forwards;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+    .core-values-section {
+      background-color: rgba(255, 0, 0, 0.1); /* transparent red */
+      padding: 40px 20px;
+      border-radius: 15px;
+      margin: 30px auto;
+      max-width: 900px;
+    }
+
+    .core-values-section h2 {
+      color: blue;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .core-values-section p {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .core-values-section p strong {
+      color: #000;
+    }
+     
+    .container {
+      position: relative;
+      width: 100%;
+      height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-box {
+      position: absolute;
+      width: 90%;
+      max-width: 800px;
+      height: 500px;
+      border-radius: 30px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 10px;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      animation: slideZoom 6s infinite;
+    }
+
+    .small-box {
+      background-color: royalblue;
+      padding: 10px 50px;
+      border-radius: 20px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      animation: slideZoom 6s infinite;
+    }
+
+    .chairman-text {
+      position: absolute;
+      top: 55px;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      animation: slideZoom 6s infinite;
+    }
+
+    @keyframes slideZoom {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateX(100%);
+      }
+      10% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+      }
+      90% {
+        opacity: 0;
+        transform: scale(0.8) translateX(-100%);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.8) translateX(-100%);
+      }
+    } 
+    <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    footer {
+      background-color: #6a1b9a;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .footer-section {
+      flex: 1 1 300px;
+      margin-bottom: 20px;
+    }
+
+    .footer-section h2 {
+      margin-bottom: 10px;
+    }
+
+    .footer-section p, .footer-section a {
+      color: white;
+      text-decoration: none;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .social-icons a {
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    .social-icons img {
+      width: 40px;
+      transition: transform 0.3s;
+    }
+
+    .social-icons img:hover {
+      transform: scale(1.1);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid #ffffff33;
+      padding-top: 20px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-section {
+        text-align: center;
+      }
+    }
+  </style>
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="library-title">TAFES SJCHAS DIGITAL LIBRARY</div>
+
+    <div class="menu-icon" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+
+    <div id="menu" class="menu">
+      <a href="medicine1.html">Medicine</a>
+      <a href="Pharm.html">Pharmacy</a>
+      <a href="Nursingx.html">Nursing</a>
+      <a href="Tafesx.html">TAFES</a>
+      <a href="about.html">About</a>
+    </div>
+<div class="slideshow-container">
+  <div class="slide" style="background-image: url('images.jpeg');"></div>
+  <div class="slide" style="background-image: url('imagesd.jpeg');"></div>
+  <div class="slide" style="background-image: url('images12.jpeg');"></div>
+  <div class="slide" style="background-image: url('images18.jpeg');"></div>
+  <div class="slide" style="background-image: url('images23.jpeg');"></div>
+ <div class="slide" style="background-image: url('Textbook_of_Gynecology1749638123124.jpg');"></div>
+ <div class="slide" style="background-image: url('8xuau_512.webp');"></div> 
+ <div class="slide" style="background-image: url('Screenshot_20250702-103136.jpg');"></div> 
+ 
+  <div class="text-overlay">
+    <div class="blue-text">WELCOME TO OUR DIGITAL LIBRARY</div>
+    <div class="yellow-text">Access and Share Knowledge Easily</div>
+  </div>
+</div>
+  <div class="quote-box">
+    <div class="main-text">
+      kwa msaada wa Mungu tutatenda mambo makuu
+    </div>
+    <div class="verse">zaburi 108:13a</div>
+  </div>
+  <div class="overlay-box">
+  <div id="word1" class="fade-slide">A versatile single solution platform to access your library from anywhere, anytime</div>
+  <div id="word2" class="fade-slide">Tafes library has made it possible to do a one-point search across resources and access the library at any time, from anywhere and on any device</div>
+</div>
+<div class="core-values-section">
+    <h2>OUR CORE VALUES</h2>
+
+    <p><strong>We are Evangelical:</strong> By being evangelical, TAFES is a Bible-believing Fellowship. The Bible is our standard & final authority in all matters of faith & conduct.</p>
+
+    <p><strong>We are Interdenominational and Nondenominational:</strong> By being interdenominational, TAFES membership cuts across various denominations and hence provides a common forum for worship. All members subscribe to TAFES doctrinal basis of faith. As a nondenominational Fellowship, TAFES is not a denomination and does not align with any particular denomination. However, TAFES recognizes and identifies with local churches and serves them by reaching out to students while they are on campus.</p>
+
+    <p><strong>We are student-centred:</strong> We operate primarily in tertiary institutions and we are committed to students’ initiative and leadership based on biblical principles.</p>
+
+    <p><strong>We are passionate about the unity of believers:</strong> As a result of our interdenominational and nondenominational status, we provide a forum where believers from different denominations interact and relate as members of the universal Church – the body of Christ.</p>
+
+    <p><strong>We advocate the practices of excellence and integrity:</strong> We aim to ensure that our students are academically excellent and that they have godly character with Christ as their role model. Through this virtue, these students become associates who will honour God through their lifestyles in the broader society.</p>
+  </div>
+  <div class="container">
+  <div class="main-box" id="mainBox">
+    <div class="small-box" id="textName">ISAYA</div>
+    <div class="chairman-text" id="textRole">Chairman</div>
+  </div>
+</div>
+ <!-- Content Here -->
+  <div style="padding: 50px; text-align: center;">
+  
+  
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+
+      <!-- Contact Section -->
+      <div class="footer-section">
+        <h2>Contact Us</h2>
+        <p>Email: tafeslibrary@sjchas.ac.tz</p>
+        <p>Phone: +255741900539</p>
+        <p>Location: SJCHAS boko Campus, Dar es salaam</p>
+      </div>
+
+      <!-- Social Icons -->
+      <div class="footer-section social-icons">
+        <h2>Follow Us</h2>
+       
+        <a href="https://www.instagram.com/tafes_st.joseph" target="_blank">
+          <img src="https://img.icons8.com/fluency/48/instagram-new.png" alt="Instagram">
+        </a>
+        <a href="https://www.tiktok.com/@tafes.stjosephbok" target="_blank">
+          <img src="https://img.icons8.com/color/48/tiktok--v1.png" alt="TikTok">
+        </a>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h2>Quick Links</h2>
+        <a href="#">Home</a>
+        <a href="about.html">About</a>
+        <a href="pharm.html">pharmacy</a>
+        <a href="medicine1.html">medicine</a>
+      </div>
+
+    </div>
+
+    <!-- Bottom Text -->
+    <div class="footer-bottom">
+      &copy; 2025 TAFES SJCHAS Library. All rights reserved.
+    </div>
+  </footer>
+  </header>
+  <script>
+  const images = [
+    { image: "Screenshot_20250708-035435.jpg", name: "ISAYA CHATAWE", role: "Chairman" },
+    { image: "Screenshot_20250708-035456.jpg", name: "DANIEL NGONYANI", role: "Vice chairman" },
+    { image: "Screenshot_20250708-035527.jpg", name: "DOREENE KAMARU", role: "SECRETARY" },
+    { image: "Screenshot_20250708-035543.jpg", name: "ESTER KALIDUSHI", role: "DEPUTY SECRETARY" },
+    { image: "Screenshot_20250708-035600.jpg", name: "JAQCKLINE SABIBI", role: "TRESURER" }
+  ];
+
+  let index = 0;
+  const mainBox = document.getElementById('mainBox');
+  const textName = document.getElementById('textName');
+  const textRole = document.getElementById('textRole');
+
+  function rotateContent() {
+    const current = images[index];
+    mainBox.style.backgroundImage = `url('${current.image}')`;
+    textName.textContent = current.name;
+    textRole.textContent = current.role;
+
+    index = (index + 1) % images.length;
+  }
+
+  rotateContent(); // Initial call
+  setInterval(rotateContent, 6000); // Every 0.5 seconds
+</script>
+ <script>
+  const word1 = document.getElementById('word1');
+  const word2 = document.getElementById('word2');
+
+  let current = 1;
+
+  function animateLoop() {
+    if (current === 1) {
+      word2.classList.remove('active', 'exit');
+      word1.classList.add('active');
+      setTimeout(() => {
+        word1.classList.remove('active');
+        word1.classList.add('exit');
+      }, 4000);
+      current = 2;
+    } else {
+      word1.classList.remove('active', 'exit');
+      word2.classList.add('active');
+      setTimeout(() => {
+        word2.classList.remove('active');
+        word2.classList.add('exit');
+      }, 4000);
+      current = 1;
+    }
+  }
+
+  animateLoop();
+  setInterval(animateLoop, 6000); // repeat every 6s
+</script>
+<script>
+  const word1 = document.getElementById('word1');
+  const word2 = document.getElementById('word2');
+
+  function animateWords() {
+    word1.classList.add('active');
+
+    setTimeout(() => {
+      word1.classList.remove('active');
+      word1.classList.add('exit');
+    }, 4000);
+
+    setTimeout(() => {
+      word2.classList.add('active');
+    }, 5500);
+
+    setTimeout(() => {
+      word2.classList.remove('active');
+      word2.classList.add('exit');
+    }, 9500);
+  }
+
+  window.onload = animateWords;
+</script>
+
+<script>
+  let slides = document.querySelectorAll('.slide');
+  let index = 0;
+
+  function showSlide() {
+    slides.forEach((slide) => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+    index = (index + 1) % slides.length;
+  }
+
+  showSlide();
+  setInterval(showSlide, 5000); // Change every 5 seconds
+</script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>

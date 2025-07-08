@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flip Book Categories</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    /* Flip Book & Apply Now Buttons */
+    .flip-book-btn,
+    .apply-now-btn {
+      position: fixed;
+      bottom: 20px;
+      padding: 12px 20px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .flip-book-btn {
+      left: 20px;
+      border-radius: 50px;
+      background: linear-gradient(to right, purple, pink);
+    }
+
+    .apply-now-btn {
+      right: 20px;
+      border-radius: 30px;
+      background-color: #007bff;
+    }
+
+    .apply-now-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .apply-content {
+      display: none;
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      background: gold;
+      padding: 15px;
+      border-radius: 10px;
+      color: black;
+      font-weight: bold;
+      text-align: center;
+      width: 250px;
+    }
+
+    .apply-content a {
+      display: inline-block;
+      margin-top: 10px;
+      color: darkblue;
+      text-decoration: none;
+    }
+
+    /* Flip Book Content */
+    .flip-content {
+      display: none;
+      position: fixed;
+      bottom: 70px;
+      left: 20px;
+      background: rgba(200, 255, 200, 0.95);
+      padding: 15px;
+      border-radius: 10px;
+      width: 250px;
+    }
+
+    .flip-content div {
+      padding: 10px;
+      margin: 5px 0;
+      background: white;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Book Section */
+    .book-section {
+      display: none;
+      padding: 80px 20px 40px;
+    }
+
+    .search-bar {
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .book-card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .book-card:hover {
+      transform: scale(1.02);
+    }
+
+    .book-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .download-icon {
+      font-size: 20px;
+      color: green;
+      text-decoration: none;
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid green;
+      border-radius: 5px;
+    }
+
+    /* Responsive Button Font */
+    @media (max-width: 600px) {
+      .flip-book-btn,
+      .apply-now-btn {
+        font-size: 14px;
+        padding: 10px 15px;
+      }
+
+      .flip-content,
+      .apply-content {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flip Book Button -->
+  <button class="flip-book-btn" onclick="toggleFlip()">Flip Book</button>
+  <div class="flip-content" id="flipContent">
+    <div onclick="openSection('medicine')">Medicine</div>
+    <div onclick="openSection('pharmacy')">Pharmacy</div>
+    <div onclick="openSection('nursing')">Nursing</div>
+    <div onclick="openSection('tafes')">TAFES</div>
+  </div>
+
+  <!-- Apply Now Button -->
+  <button class="apply-now-btn" onclick="toggleApply()">Apply Now</button>
+  <div class="apply-content" id="applyContent">
+    Licensed Medical Practitioner Jobs<br>
+    <a href="https://ajira.tamisemi.go.tz" target="_blank">Go to OR-TAMISEMI Jobs</a>
+  </div>
+
+  <!-- Book Sections -->
+  <div id="medicine" class="book-section">
+    <div class="search-bar"><input type="text" placeholder="Search Medicine Books..."></div>
+    <div class="book-grid">
+      <div class="book-card">
+        <div class="book-title">Anatomy Basics</div>
+        <a href="books/Cunningham’s Manual of Practical Anatomy. Volume 1- Upper -- Rachel Koshi -- ( WeLib.org ).pdf"target=_"blank" class="download-icon">⬇ Download</a>
+      </div>
+      <div class="book-card">
+        <div class="book-title">Physiology Guide</div>
+        <a href="#" class="download-icon">⬇ Download</a>
+      </div>
+      <div class="book-card">
+        <div class="book-title">Medical Pathology</div>
+        <a href="#" class="download-icon">⬇ Download</a>
+      </div>
+      <div class="book-card">
+        <div class="book-title">Surgical Techniques</div>
+        <a href="#" class="download-icon">⬇ Download</a>
+      </div>
+      <div class="book-card">
+        <div class="book-title">Microbiology Manual</div>
+        <a href="#" class="download-icon">⬇ Download</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="pharmacy" class="book-section">
+    <div class="search-bar"><input type="text" placeholder="Search Pharmacy Books..."></div>
+    <div class="book-grid">
+      <div class="book-card"><div class="book-title">Pharmacology Basics</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Drug Formulations</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Clinical Pharmacy</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Dispensing Practice</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Toxicology</div><a href="#" class="download-icon">⬇ Download</a></div>
+    </div>
+  </div>
+
+  <div id="nursing" class="book-section">
+    <div class="search-bar"><input type="text" placeholder="Search Nursing Books..."></div>
+    <div class="book-grid">
+      <div class="book-card"><div class="book-title">Nursing Procedures</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Pediatric Nursing</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Mental Health Care</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Adult Nursing</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Community Health</div><a href="#" class="download-icon">⬇ Download</a></div>
+    </div>
+  </div>
+
+  <div id="tafes" class="book-section">
+    <div class="search-bar"><input type="text" placeholder="Search TAFES Books..."></div>
+    <div class="book-grid">
+      <div class="book-card"><div class="book-title">Evangelism 101</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Faith & Science</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Christian Leadership</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Bible Study Guide</div><a href="#" class="download-icon">⬇ Download</a></div>
+      <div class="book-card"><div class="book-title">Living the Gospel</div><a href="#" class="download-icon">⬇ Download</a></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleFlip() {
+      const flip = document.getElementById("flipContent");
+      flip.style.display = flip.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleApply() {
+      const apply = document.getElementById("applyContent");
+      apply.style.display = apply.style.display === "block" ? "none" : "block";
+    }
+
+    function openSection(sectionId) {
+      const all = document.querySelectorAll('.book-section');
+      all.forEach(sec => sec.style.display = "none");
+
+      document.getElementById(sectionId).style.display = "block";
+      document.getElementById("flipContent").style.display = "none";
+    }
+  </script>
+</body>
+</html>

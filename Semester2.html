@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medical Library</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      background-color: #fff;
+      padding: 20px 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .subject-btn {
+      margin: 10px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .subject-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .anatomy { background-color: #0077cc; }
+    .physiology { background-color: #28a745; }
+    .biochemistry { background-color: #e83e8c; }
+    .ethics { background-color: #6f42c1; }
+    .development { background-color: #fd7e14; }
+
+    .content {
+      display: none;
+      padding: 20px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .section-toggle {
+      background-color: #ddd;
+      border: none;
+      width: 100%;
+      padding: 10px 20px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 15px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .resource-list {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .resource {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .resource span {
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .download-btn {
+      background-color: red;
+      border: none;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .subject-btn {
+        width: 90%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="subject-btn anatomy" onclick="toggleSubject('anatomy')">Anatomy</button>
+    <button class="subject-btn physiology" onclick="toggleSubject('physiology')">Physiology</button>
+    <button class="subject-btn biochemistry" onclick="toggleSubject('biochemistry')">Biochemistry</button>
+    <button class="subject-btn ethics" onclick="toggleSubject('ethics')">Ethics & Professionalism</button>
+    <button class="subject-btn development" onclick="toggleSubject('development')">Development Studies</button> <button class="subject-btn development" onclick="toggleSubject('development')">Comunication ICT</button>
+  </div>
+
+  <!-- SUBJECT TEMPLATE -->
+  <div id="anatomy" class="content">
+    <button class="section-toggle" onclick="toggleList(this)">📘 Books</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search books..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Gross Anatomy Book</span><a href="books/anatomy_book1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Atlas of Human Anatomy</span><a href="books/anatomy_book2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📄 Notes</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search notes..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Anatomy Notes 1</span><a href="notes/anatomy_notes1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Neuroanatomy Summary</span><a href="notes/anatomy_notes2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📝 Past Papers</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search past papers..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Anatomy Past Paper 2023</span><a href="papers/anatomy_paper1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Anatomy Paper 2022</span><a href="papers/anatomy_paper2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+  </div>
+
+  <!-- Copy and modify this block per subject -->
+  <div id="physiology" class="content">
+    <button class="section-toggle" onclick="toggleList(this)">📘 Books</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search books..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Medical Physiology Guyton</span><a href="books/physiology_book1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Cell Physiology Book</span><a href="books/physiology_book2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📄 Notes</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search notes..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Cardiac Physiology Notes</span><a href="notes/physiology_notes1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Renal Physiology Notes</span><a href="notes/physiology_notes2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📝 Past Papers</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search past papers..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Physiology Final 2023</span><a href="papers/physiology_paper1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Midterm Physiology 2022</span><a href="papers/physiology_paper2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+  </div>
+
+  <div id="biochemistry" class="content">
+    <button class="section-toggle" onclick="toggleList(this)">📘 Books</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search books..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Lehninger Biochemistry</span><a href="books/biochem_book1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Clinical Biochemistry Book</span><a href="books/biochem_book2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📄 Notes</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search notes..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Metabolism Notes</span><a href="notes/biochem_notes1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Protein Chemistry</span><a href="notes/biochem_notes2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📝 Past Papers</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search past papers..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Biochemistry Paper 2023</span><a href="papers/biochem_paper1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Biochem Midterm 2022</span><a href="papers/biochem_paper2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+  </div>
+
+  <div id="ethics" class="content">
+    <button class="section-toggle" onclick="toggleList(this)">📘 Books</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search books..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Medical Ethics Handbook</span><a href="books/ethics_book1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Professionalism in Medicine</span><a href="books/ethics_book2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📄 Notes</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search notes..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Ethics Lecture Notes</span><a href="notes/ethics_notes1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Code of Conduct</span><a href="notes/ethics_notes2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📝 Past Papers</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search past papers..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Ethics Final 2023</span><a href="papers/ethics_paper1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Professionalism Test 2022</span><a href="papers/ethics_paper2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+  </div>
+
+  <div id="development" class="content">
+    <button class="section-toggle" onclick="toggleList(this)">📘 Books</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search books..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Social Development Book</span><a href="books/devstudies_book1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Global Health & Dev</span><a href="books/devstudies_book2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📄 Notes</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search notes..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Dev Studies Notes</span><a href="notes/devstudies_notes1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Human Rights Notes</span><a href="notes/devstudies_notes2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+
+    <button class="section-toggle" onclick="toggleList(this)">📝 Past Papers</button>
+    <div class="resource-list">
+      <input type="text" class="search-input" placeholder="Search past papers..." onkeyup="filterResources(this)">
+      <div class="resource"><span>Dev Paper 2023</span><a href="papers/devstudies_paper1.pdf" download><button class="download-btn">↓</button></a></div>
+      <div class="resource"><span>Development Quiz 2022</span><a href="papers/devstudies_paper2.pdf" download><button class="download-btn">↓</button></a></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSubject(id) {
+      const content = document.getElementById(id);
+      const isVisible = content.style.display === "block";
+      document.querySelectorAll('.content').forEach(section => section.style.display = "none");
+      content.style.display = isVisible ? "none" : "block";
+      if (!isVisible) content.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function toggleList(button) {
+      const list = button.nextElementSibling;
+      list.style.display = list.style.display === "block" ? "none" : "block";
+    }
+
+    function filterResources(input) {
+      const filter = input.value.toLowerCase();
+      const resources = input.parentElement.querySelectorAll(".resource");
+      resources.forEach(resource => {
+        const text = resource.textContent.toLowerCase();
+        resource.style.display = text.includes(filter) ? "flex" : "none";
+      });
+    }
+  </script>
+
+</body>
+</html>

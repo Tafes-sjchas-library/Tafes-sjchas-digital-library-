@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flip Book Library</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    #flipbookBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007BFF;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 25px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    #categoryContainer {
+      position: fixed;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background: rgba(0, 0, 255, 0.6);
+      color: white;
+      font-weight: bold;
+      font-family: Arial;
+      overflow-y: auto;
+      border-radius: 20px;
+      padding: 20px;
+      z-index: 998;
+    }
+
+    .book-list {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .book {
+      width: 120px;
+      height: 170px;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .book img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #flipbookViewer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 10%; height: 40%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #flipbook {
+      width: 80%;
+      height: 50%;
+    }
+
+    #downloadBtn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: #007BFF;
+      color: #fff;
+      padding: 10px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    #closeBtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: red;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating Flip Book Button -->
+<button id="flipbookBtn"> Flip Book</button>
+
+<!-- Flip Book Category Container -->
+<div id="categoryContainer" class="hidden">
+  <h2>Medicine</h2>
+  <div class="book-list" id="medicineList"></div>
+
+  <h2>Pharmacy</h2>
+  <div class="book-list" id="pharmacyList"></div>
+
+  <h2>Nursing</h2>
+  <div class="book-list" id="nursingList"></div>
+
+  <h2>TAFES</h2>
+  <div class="book-list" id="tafesList"></div>
+</div>
+
+<!-- Flipbook Viewer -->
+<div id="flipbookViewer" class="hidden">
+  <div id="flipbook" class="flipbook"></div>
+  <a id="downloadBtn" href="#" download> Download</a>
+  <button id="closeBtn">Close</button>
+</div>
+
+<!-- Turn.js CDN (for flipbook) -->
+<script src="https://cdn.jsdelivr.net/gh/blasten/turn.js@master/lib/turn.min.js"></script>
+
+<script>
+  document.getElementById('flipbookBtn').onclick = () => {
+    document.getElementById('categoryContainer').classList.toggle('hidden');
+  };
+
+  document.getElementById('closeBtn').onclick = () => {
+    document.getElementById('flipbookViewer').classList.add('hidden');
+    document.getElementById('flipbook').innerHTML = '';
+  };
+
+  const books = {
+    medicine: [
+      { title: "Guyton", file: "books/imagesd.jpeg", cover: "https://i.imgur.com/UdqCVmv.jpg" },
+      { title: "Medical Physiology", file: "books/medical-physiology.pdf", cover: "https://i.imgur.com/0yUL5Rm.jpg" }
+    ],
+    pharmacy: [
+      { title: "Pharma Book", file: "books/guyton-sample.pdf", cover: "https://i.imgur.com/qxkJYBc.jpg" }
+    ],
+    nursing: [
+      { title: "Nursing Book", file: "books/guyton-sample.pdf", cover: "https://i.imgur.com/WG8a3Oa.jpg" }
+    ],
+    tafes: [
+      { title: "TAFES Book", file: "books/guyton-sample.pdf", cover: "https://i.imgur.com/AVz8Nm1.jpg" }
+    ]
+  };
+
+  function loadBooks(sectionId, list) {
+    const container = document.getElementById(sectionId);
+    list.forEach(book => {
+      const div = document.createElement('div');
+      div.className = 'book';
+      div.innerHTML = `<img src="${book.cover}" alt="${book.title}" />`;
+      div.onclick = () => openFlipBook(book.file);
+      container.appendChild(div);
+    });
+  }
+
+  function openFlipBook(pdfUrl) {
+    document.getElementById('flipbookViewer').classList.remove('hidden');
+    document.getElementById('downloadBtn').href = pdfUrl;
+
+    const viewer = document.getElementById('flipbook');
+    viewer.innerHTML = '';
+
+    // Simulate 8 pages (You can extend or use PDF parser here)
+    for (let i = 1; i <= 8; i++) {
+      const page = document.createElement('div');
+      page.className = 'page';
+      page.innerHTML = `<div style="background:white;width:100%;height:100%;padding:20px;">Page ${i}</div>`;
+      viewer.appendChild(page);
+    }
+
+    $('#flipbook').turn({
+      width: '100%',
+      height: '50%',
+      autoCenter: true,
+      display: 'double'
+    });
+  }
+
+  loadBooks("medicineList", books.medicine);
+  loadBooks("pharmacyList", books.pharmacy);
+  loadBooks("nursingList", books.nursing);
+  loadBooks("tafesList", books.tafes);
+</script>
+
+</body>
+</html>

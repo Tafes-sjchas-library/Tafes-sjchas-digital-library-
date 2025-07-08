@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D PHARM 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Algerian&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      margin-left: 30px;
+    }
+
+    h1 {
+      font-family: 'Algerian', serif;
+      color: blue;
+      font-weight: bold;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .silver-box {
+      background: linear-gradient(145deg, #b0b0b0, #dcdcdc);
+      padding: 20px;
+      border-radius: 20px;
+      width: 200px;
+      box-shadow: 0 0 15px rgba(192, 192, 192, 0.8);
+    }
+
+    .silver-box button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: transparent;
+      border: 2px solid white;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .silver-box button:hover {
+      background-color: white;
+      color: brown;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>D PHARM 2</h1>
+    <div class="silver-box">
+      <button onclick="openSemester('semester1.html')">Semester 1</button>
+      <button onclick="openSemester('semester2.html')">Semester 2</button>
+    </div>
+  </div>
+
+  <script>
+    function openSemester(url) {
+      window.location.href = "semester1.html"
+    }
+  </script>
+</body>
+</html>

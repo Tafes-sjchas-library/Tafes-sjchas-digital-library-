@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neuroanatomy Library</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #eef3fa;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .book-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      background: #dfe6f1;
+      padding: 10px;
+    }
+
+    .book-selector button {
+      padding: 10px 20px;
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .book-selector button:hover {
+      background: #4a116e;
+    }
+
+    .flipbook-wrapper {
+      display: none;
+      height: calc(100% - 60px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .flipbook-wrapper.active {
+      display: flex;
+    }
+
+    #flipbook {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      width: 800px;
+      height: 560px;
+      position: relative;
+    }
+
+    #flipbook.dragging {
+      cursor: grabbing;
+    }
+
+    .page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .controls button {
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background: #4a116e;
+    }
+
+    .download-btn {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      background: #0077cc;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      z-index: 99;
+    }.controls-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 220px; /* leave room for sidebar */
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+}
+
+.controls-bar button,
+.controls-bar .download-btn {
+  background: #6a1b9a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.controls-bar button:hover,
+.controls-bar .download-btn:hover {
+  background: #4a116e;
+}
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+</head>
+<body>
+
+<div class="book-selector">
+  <button onclick="showBook(1)">Neuroanatomy 1</button>
+  <button onclick="showBook(2)">Neuroanatomy 2</button>
+  <button onclick="showBook(3)">Neuroanatomy 3</button>
+  <button onclick="showBook(4)">Neuroanatomy 4</button>
+  <button onclick="showBook(5)">Neuroanatomy 5</button>
+</div>
+
+<div id="flipbook-container" class="flipbook-wrapper active"></div>
+
+<audio id="flipSound" src="sounds/flipcard.mp3" preload="auto"></audio>
+<div class="controls-bar">
+  <button onclick="$('#flipbook').turn('previous'); playSound();">⟵ Prev</button>
+  <button onclick="$('#flipbook').turn('next'); playSound();">Next ⟶</button>
+  <a id="downloadBtn" href="#" download class="download-btn"> Download</a>
+</div>
+<script>
+  document.getElementById("downloadBtn").href = books[n].pdf;
+  const books = {
+    1: { folder: "images/neuroanatomy", pdf: "books/neuroanatomy1.pdf" },
+    2: { folder: "images/book2", pdf: "books/neuroanatomy2.pdf" },
+    3: { folder: "images/book3", pdf: "books/neuroanatomy3.pdf" },
+    4: { folder: "images/book4", pdf: "books/neuroanatomy4.pdf" },
+    5: { folder: "images/book5", pdf: "books/neuroanatomy5.pdf" }
+  };
+
+  let scale = 1, originX = 0, originY = 0, isDragging = false, lastX = 0, lastY = 0, lastTouchDist = null, lastTap = 0;
+  const swipeThreshold = 40;
+
+  function showBook(n) {
+    const container = document.getElementById('flipbook-container');
+    container.innerHTML = '';
+
+    const flipDiv = document.createElement('div');
+    flipDiv.id = "flipbook";
+
+    // Download Button
+    const download = document.createElement('a');
+    download.href = books[n].pdf;
+    download.className = 'download-btn';
+    download.textContent = 'Download Book';
+    download.setAttribute('download', '');
+
+    // Controls
+    const controls = document.createElement('div');
+    controls.className = 'controls';
+    controls.innerHTML = `
+      <button onclick="$('#flipbook').turn('previous'); playSound();">Prev</button>
+      <button onclick="$('#flipbook').turn('next'); playSound();">Next</button>
+    `;
+
+    // Add 5 pages (you can increase this)
+    for (let i = 1; i <= 5; i++) {
+      const page = document.createElement('div');
+      page.className = 'page';
+      page.innerHTML = `<img src="${books[n].folder}/page${i}.jpg" alt="Page ${i}">`;
+      flipDiv.appendChild(page);
+    }
+
+    flipDiv.appendChild(download);
+    flipDiv.appendChild(controls);
+    container.appendChild(flipDiv);
+    container.classList.add("active");
+
+    $('#flipbook').turn({
+      display: 'double',
+      gradients: true,
+      acceleration: true
+    });
+
+    resizeFlipbook();
+    setupZoomAndPan();
+  }
+
+  function resizeFlipbook() {
+    const flip = document.getElementById('flipbook');
+    const wW = window.innerWidth;
+    const wH = window.innerHeight - 100;
+    let width = wW * 0.95;
+    let height = width / 2 * 1.4;
+    if (height > wH) {
+      height = wH;
+      width = height / 1.4 * 2;
+    }
+    flip.style.width = width + "px";
+    flip.style.height = height + "px";
+    $('#flipbook').turn('size', width, height);
+  }
+
+  function playSound() {
+    const snd = document.getElementById('flipSound');
+    snd.pause();
+    snd.currentTime = 0;
+    snd.play().catch(() => {});
+  }
+
+  function setupZoomAndPan() {
+    const flip = document.getElementById('flipbook');
+
+    flip.onwheel = function (e) {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      const rect = flip.getBoundingClientRect();
+      const offsetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const offsetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      scale += e.deltaY * -0.0015;
+      scale = Math.min(Math.max(scale, 1), 6);
+      if (scale === 1) originX = originY = 0;
+      else {
+        originX -= offsetX * 50;
+        originY -= offsetY * 50;
+      }
+      flip.style.transform = `scale(${scale}) translate(${originX}px, ${originY}px)`;
+    };
+
+    flip.onmousedown = function (e) {
+      if (scale === 1) return;
+      isDragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      flip.classList.add('dragging');
+    };
+
+    window.onmousemove = function (e) {
+      if (!isDragging) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      originX += dx / scale;
+      originY += dy / scale;
+      flip.style.transform = `scale(${scale}) translate(${originX}px, ${originY}px)`;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    };
+
+    window.onmouseup = () => {
+      isDragging = false;
+      flip.classList.remove('dragging');
+    };
+
+    flip.ontouchstart = function (e) {
+      if (e.touches.length === 2) {
+        lastTouchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+      } else if (e.touches.length === 1 && scale > 1) {
+        isDragging = true;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+        flip.classList.add('dragging');
+      }
+    };
+
+    flip.ontouchmove = function (e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        let delta = dist - lastTouchDist;
+        scale += delta * 0.005;
+        scale = Math.min(Math.max(scale, 1), 6);
+        flip.style.transform = `scale(${scale}) translate(${originX}px, ${originY}px)`;
+        lastTouchDist = dist;
+      } else if (isDragging && e.touches.length === 1) {
+        const dx = e.touches[0].clientX - lastX;
+        const dy = e.touches[0].clientY - lastY;
+        originX += dx / scale;
+        originY += dy / scale;
+        flip.style.transform = `scale(${scale}) translate(${originX}px, ${originY}px)`;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+      }
+    };
+
+    flip.ontouchend = function (e) {
+      const now = new Date().getTime();
+      if (now - lastTap < 300 && e.touches.length === 0) {
+        scale = scale > 1 ? 1 : 3;
+        originX = originY = 0;
+        flip.style.transform = `scale(${scale}) translate(${originX}px, ${originY}px)`;
+      }
+      lastTap = now;
+      isDragging = false;
+      flip.classList.remove('dragging');
+      lastTouchDist = null;
+    };
+  }
+
+  // Load first book
+  window.onload = () => showBook(1);
+  window.onresize = () => resizeFlipbook();
+</script>
+
+</body>
+</html>
